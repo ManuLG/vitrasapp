@@ -1,6 +1,8 @@
 package com.mlorenzo.vitrasapp;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,14 @@ public class MyCardAdapter extends RecyclerView.Adapter<MyCardAdapter.ContactVie
         public ContactViewHolder(View v) {
             super(v);
             vName =  (TextView) v.findViewById(R.id.txtName);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    Log.d("DDD", vName.getText().toString());
+                    Intent goToNextActivity = new Intent(v.getContext(), StopDetailActivity.class);
+                    goToNextActivity.putExtra("name", vName.getText().toString());
+                    v.getContext().startActivity(goToNextActivity);
+                }
+            });
         }
     }
 }
