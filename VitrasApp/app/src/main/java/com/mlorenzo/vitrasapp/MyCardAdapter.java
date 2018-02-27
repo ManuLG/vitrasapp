@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.mlorenzo.vitrasapp.stopDetail.StopDetailActivity;
 
 import org.json.JSONObject;
 
@@ -78,7 +79,7 @@ public class MyCardAdapter extends RecyclerView.Adapter<MyCardAdapter.ContactVie
                             Log.d("Request", response.toString());
 
                             Intent goToNextActivity = new Intent(context, StopDetailActivity.class);
-                            goToNextActivity.putExtra("name", response.toString());
+                            goToNextActivity.putExtra("response", response.toString());
                             context.startActivity(goToNextActivity);
                         }
                     }, new Response.ErrorListener() {

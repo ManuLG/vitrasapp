@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".StopDetailActivity" />
+        <activity android:name=".stopDetail.StopDetailActivity" />
     </application>
 
 </manifest>

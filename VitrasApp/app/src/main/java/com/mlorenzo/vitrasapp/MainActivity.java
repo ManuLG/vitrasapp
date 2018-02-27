@@ -14,7 +14,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     MyCardAdapter ca;
-    List<StopInformation> stops = new ArrayList();;
+    List<StopInformation> stops = new ArrayList();
 
 
     @Override
