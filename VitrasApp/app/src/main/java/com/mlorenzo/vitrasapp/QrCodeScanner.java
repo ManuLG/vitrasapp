@@ -7,11 +7,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.zxing.Result;
+import com.mlorenzo.vitrasapp.stopDetail.StopDetailActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,30 +83,56 @@ public class QrCodeScanner extends AppCompatActivity implements ZXingScannerView
 
         }
 
-        SharedPreferences sharedPref = getSharedPreferences("data", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        Gson gson = new Gson();
-        JSONArray array = null;
-        try {
-            Log.e("Antes", sharedPref.getString("stops_fav", ""));
+        testRequest(this.getBaseContext(), rawResult.getText());
 
-            if (sharedPref.getString("stops_fav", "").equals("")) {
-                array = new JSONArray();
-            } else {
-                array = new JSONArray(sharedPref.getString("stops_fav", ""));
-            }
+    }
 
-            array.put(gson.toJson(new StopInformation("This is a test")));
-            editor.putString("stops_fav", array.toString());
-            editor.apply();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void testRequest(final Context context, final String rawResult) {
 
-        Intent intent = new Intent();
-        intent.putExtra("result", rawResult.getText());
-        setResult(RESULT_OK, intent);
-        finish();
+        String url = "http://manulg.ddns.net:5000/stops/6660";
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("RequestQR", response.toString());
+
+                        SharedPreferences sharedPref = getSharedPreferences("data", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        Gson gson = new Gson();
+                        JSONArray array = null;
+                        try {
+                            Log.e("Antes", sharedPref.getString("stops_fav", ""));
+
+                            if (sharedPref.getString("stops_fav", "").equals("")) {
+                                array = new JSONArray();
+                            } else {
+                                array = new JSONArray(sharedPref.getString("stops_fav", ""));
+                            }
+
+                            array.put(gson.toJson(new StopInformation(response.getString("name"))));
+                            editor.putString("stops_fav", array.toString());
+                            editor.apply();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Intent intent = new Intent();
+                        intent.putExtra("result", rawResult);
+                        setResult(RESULT_OK, intent);
+                        finish();
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+        Volley.newRequestQueue(context).add(jsObjRequest);
     }
 }
 
