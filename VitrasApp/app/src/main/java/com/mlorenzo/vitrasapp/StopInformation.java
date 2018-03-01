@@ -7,4 +7,6 @@ package com.mlorenzo.vitrasapp;
 public class StopInformation {
 
     protected String name = "Nombre de la parada";
+    protected String number = "";
+    protected String[] location = new String[2];
 }

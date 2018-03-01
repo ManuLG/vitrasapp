@@ -1,5 +1,6 @@
 package com.mlorenzo.vitrasapp;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     MyCardAdapter ca;
-    List<StopInformation> stops = new ArrayList();
+    List<StopInformation> stops = new ArrayList<>();
 
 
     @Override
@@ -27,8 +28,14 @@ public class MainActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stops.add(new StopInformation());
-                ca.notifyDataSetChanged();
+                try {
+
+                    Intent intent = new Intent(view.getContext(), QrCodeScanner.class);
+                    startActivityForResult(intent, 0);
+
+                } catch (Exception e) {
+                    Log.e("Error", e.getMessage());
+                }
             }
         });
 
@@ -44,6 +51,17 @@ public class MainActivity extends AppCompatActivity {
         ca = new MyCardAdapter(stops);
         recList.setAdapter(ca);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+
+            if (resultCode == RESULT_OK) {
+                String contents = data.getStringExtra("result");
+            }
+        }
+    } // Close onActivityResult
 
     private void createList(int size) {
         for (int i=1; i <= size; i++) {

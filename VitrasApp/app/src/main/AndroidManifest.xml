@@ -3,6 +3,7 @@
     package="com.mlorenzo.vitrasapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +21,7 @@
         </activity>
 
         <activity android:name=".stopDetail.StopDetailActivity" />
+        <activity android:name=".QrCodeScanner" />
     </application>
 
 </manifest>
