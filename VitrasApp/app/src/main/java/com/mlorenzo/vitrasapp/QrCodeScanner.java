@@ -1,11 +1,17 @@
 package com.mlorenzo.vitrasapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.zxing.Result;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,6 +76,25 @@ public class QrCodeScanner extends AppCompatActivity implements ZXingScannerView
 
         }
 
+        SharedPreferences sharedPref = getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+        JSONArray array = null;
+        try {
+            Log.e("Antes", sharedPref.getString("stops_fav", ""));
+
+            if (sharedPref.getString("stops_fav", "").equals("")) {
+                array = new JSONArray();
+            } else {
+                array = new JSONArray(sharedPref.getString("stops_fav", ""));
+            }
+
+            array.put(gson.toJson(new StopInformation("This is a test")));
+            editor.putString("stops_fav", array.toString());
+            editor.apply();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         Intent intent = new Intent();
         intent.putExtra("result", rawResult.getText());
